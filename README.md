@@ -73,43 +73,54 @@ Example — adding a project highlight:
 │       ├── Stack.jsx       # Tech stack + other projects
 │       ├── About.jsx       # Bio, terminal card, contact, footer
 │       └── Icon.jsx        # Inline SVG icons (no icon library)
-├── public/404.html         # Cloudflare Pages 404 page
+├── public/404.html         # Custom 404 page (served via not_found_handling)
 ├── tailwind.config.js      # ★ Tokyo Night palette tokens
-└── wrangler.jsonc          # Cloudflare config
+├── docs/CLOUDFLARE.md      # Deployment details + gotchas
+└── wrangler.jsonc          # Cloudflare Workers config (assets.directory)
 ```
 
 ---
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare
 
-### Option A — Git integration (recommended)
+This deploys as a **Cloudflare Worker with static assets**. The output directory is configured
+in [`wrangler.jsonc`](wrangler.jsonc), **not** in the dashboard.
 
-Push this repo to GitHub, then in the Cloudflare dashboard:
+Connect the repo at **Workers & Pages → Create → Connect to Git**, then use:
 
-1. **Workers & Pages → Create → Pages → Connect to Git**
-2. Select the repository
-3. Build settings:
+| Setting | Value |
+|---|---|
+| Project name | `zmy15` |
+| Build command | `pnpm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Preview command | `npx wrangler preview` |
 
-   | Setting | Value |
-   |---|---|
-   | Framework preset | `Vite` |
-   | Build command | `pnpm build` (or `npm run build`) |
-   | Build output directory | `dist` |
-   | Node version | `20` (set `NODE_VERSION` env var if needed) |
+Every push to `main` redeploys automatically.
 
-4. **Save and Deploy** — every push to `main` redeploys automatically.
+### Verify locally first
 
-### Option B — Direct upload with Wrangler
+`wrangler dev` reproduces production behaviour, including the custom 404 page:
 
 ```bash
 pnpm build
-npx wrangler pages deploy dist --project-name=zmy15-homepage
+npx wrangler dev        # http://127.0.0.1:8788
+```
+
+### Manual deploy
+
+```bash
+pnpm build
+npx wrangler deploy
 ```
 
 ### Custom domain
 
-In the Pages project: **Custom domains → Set up a domain**. If your DNS is already on
-Cloudflare, the CNAME is created for you.
+Workers project → **Settings → Domains & Routes → Add → Custom domain**.
+
+**Full details and gotchas: [`docs/CLOUDFLARE.md`](docs/CLOUDFLARE.md)**
+
+> ⚠️ `assets.directory` in `wrangler.jsonc` is the Workers equivalent of Pages'
+> `pages_build_output_dir`. Using the Pages field name here would deploy an empty site.
 
 ---
 
