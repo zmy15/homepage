@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-tk-bg text-tk-text font-sans antialiased;
+    /* Subtle radial glow, echoing the profile card background */
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(122, 162, 247, 0.13), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 10%, rgba(187, 154, 247, 0.08), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-tk-blue/30 text-white;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { @apply bg-tk-bgDark; }
+  ::-webkit-scrollbar-thumb { @apply bg-tk-border rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-tk-dim; }
+}
+
+@layer components {
+  .container-px {
+    @apply mx-auto w-full max-w-6xl px-6 sm:px-8;
+  }
+
+  .card {
+    @apply rounded-2xl border border-tk-border bg-tk-panel/60 backdrop-blur-sm
+           transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply hover:border-tk-blue/50 hover:bg-tk-panel/90 hover:-translate-y-1
+           hover:shadow-[0_8px_40px_-12px_rgba(122,162,247,0.35)];
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-md border border-tk-border
+           bg-tk-panel2/70 px-2.5 py-1 font-mono text-xs text-tk-muted
+           transition-colors;
+  }
+
+  .chip-hover {
+    @apply hover:border-tk-blue/50 hover:text-tk-blue;
+  }
+
+  .section-title {
+    @apply font-mono text-sm font-semibold uppercase tracking-[0.2em] text-tk-blue;
+  }
+
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute -bottom-0.5 left-0 h-px w-0 bg-tk-blue transition-all duration-300;
+  }
+  .link-underline:hover::after {
+    @apply w-full;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  html { scroll-behavior: auto; }
+}

@@ -1,0 +1,16 @@
+# Normalize line endings: store LF in the repo, check out native on Windows.
+# Prevents CRLF/LF churn and keeps builds reproducible across platforms.
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# Lockfile — keep as-is, never merge
+pnpm-lock.yaml -diff merge=binary
